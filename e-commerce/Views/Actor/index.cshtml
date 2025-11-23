@@ -1,0 +1,94 @@
+﻿@using Cinema.Models.ViewModels
+@model indexVM
+
+<div class="content">
+
+    <h2>Actors List</h2>
+
+    <div class="table-responsive scrollbar">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Image</th>
+                    <th scope="col">Title</th>
+                    <th class="text-end" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Actors)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="~/assets/@item.Image"
+                                     alt="@item.Name"
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">No Image</span>
+                            }
+                        </td>
+                        <td>@item.Name</td>
+                        <td class="text-end">
+                            <div>
+                                <a class="btn btn-link p-0" href="/actor/Edit/@item.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                    <span class="text-500 fas fa-edit"></span>
+                                </a>
+
+                                <button class="btn btn-link p-0 ms-2"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        data-id="@item.Id"
+                                        data-title="@item.Name"
+                                        title="Delete">
+                                    <span class="text-500 fas fa-trash-alt"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/actor/create" class="btn btn-info mb-3">Create</a>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete <strong id="actorTitle"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes, Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const actorId = button.getAttribute('data-id');
+            const actorTitle = button.getAttribute('data-title');
+
+            const actorTitleSpan = deleteModal.querySelector('#actorTitle');
+            const confirmDeleteBtn = deleteModal.querySelector('#confirmDeleteBtn');
+
+            actorTitleSpan.textContent = `"${actorTitle}"`;
+            confirmDeleteBtn.href = `/actor/delete/${actorId}`;
+        });
+    </script>
+}

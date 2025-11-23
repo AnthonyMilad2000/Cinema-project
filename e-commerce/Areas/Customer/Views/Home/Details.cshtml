@@ -1,0 +1,56 @@
+﻿@model Cinema.ViewModels.MovieDetailsVM
+
+@{
+    Layout = "~/Areas/Customer/Views/Home/Shared/_CustomerLayout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="row">
+    <div class="col-lg-6">
+        <img class="img-fluid rounded" src="~/assets/@Model.MainImage" alt="@Model.Name" />
+        <div class="mt-3">
+            @foreach (var img in Model.SubImages)
+            {
+                <img class="img-thumbnail me-2" style="width:80px;" src="~/assets/@img.ImagePath" alt="@Model.Name" />
+            }
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <h5>@Model.Name</h5>
+        <p>@Model.Description</p>
+
+        <h4 class="text-warning mb-2">$@Model.Price</h4>
+
+        <p>
+            Status:
+            @if (Model.Status)
+            {
+                <strong class="text-success">Available</strong>
+            }
+            else
+            {
+                <strong class="text-danger">Not Available</strong>
+            }
+        </p>
+
+        <p>Cinema: <strong>@Model.CinemaName</strong></p>
+        <p>
+            Schedules:
+            @foreach (var schedule in Model.Schedules)
+            {
+                <span class="badge bg-info text-dark me-1">@schedule.ShowTime.ToString("hh:mm tt")</span>
+            }
+        </p>
+
+        <form asp-action="AddToCart" asp-controller="Cart">
+            <div class="mt-3">
+                <input hidden name="movieId" value="@Model.Id"/>
+                <input type="number" value="1" name="count" />
+                <button type="submit" class="btn btn-primary">Book Ticket</button>
+
+            </div>
+        </form>
+        
+    </div>
+</div>

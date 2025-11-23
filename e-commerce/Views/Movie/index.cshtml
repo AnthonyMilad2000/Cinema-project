@@ -1,0 +1,89 @@
+﻿@using Cinema.Models.ViewModels
+@model indexVM
+
+<div class="content">
+    <h2>Movies List</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Main Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in Model.Movie)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(movie.MainImage))
+                        {
+                            <img src="~/assets/@movie.MainImage" width="80" height="80" style="object-fit:cover;border-radius:6px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">No Image</span>
+                        }
+                    </td>
+                    <td>@movie.Name</td>
+                    <td>@movie.Price</td>
+                    <td>@(movie.Status ? "Active" : "Inactive")</td>
+                    <td class="text-end">
+                        <a href="/movie/edit/@movie.Id" class="btn btn-link p-0"><span class="fas fa-edit text-primary"></span></a>
+                        <button class="btn btn-link p-0 ms-2"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                data-id="@movie.Id"
+                                data-title="@movie.Name"
+                                title="Delete">
+                            <span class="text-500 fas fa-trash-alt"></span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="/movie/create" class="btn btn-info mt-3">Create Movie</a>
+
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete <strong id="movieTitle"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes, Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const movieId = button.getAttribute('data-id');
+            const movieTitle = button.getAttribute('data-title');
+
+            const movieTitleSpan = deleteModal.querySelector('#movieTitle');
+            const confirmDeleteBtn = deleteModal.querySelector('#confirmDeleteBtn');
+
+            movieTitleSpan.textContent = `"${movieTitle}"`;
+            confirmDeleteBtn.href = `/movie/delete/${movieId}`;
+        });
+    </script>
+}

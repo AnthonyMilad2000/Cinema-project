@@ -1,0 +1,88 @@
+﻿@using Cinema.Models
+@model IEnumerable<Cart>
+
+@{
+    Layout = "~/Areas/Customer/Views/Home/Shared/_CustomerLayout.cshtml";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+<div class="card">
+    <div class="card-header">
+        <div class="row justify-content-between">
+            <div class="col-md-auto">
+                <h5 class="mb-3 mb-md-0">Shopping Cart Item\s</h5>
+            </div>
+            <div class="col-md-auto"><a class="btn btn-sm btn-outline-secondary border-300 me-2 shadow-none" href="../../app/e-commerce/product/product-list.html"> <span class="fas fa-chevron-left me-1" data-fa-transform="shrink-4"></span>Continue Shopping</a><a class="btn btn-sm btn-primary" href="../../app/e-commerce/checkout.html">Checkout</a></div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+            <div class="col-9 col-md-8 py-2">Name</div>
+            <div class="col-3 col-md-4">
+                <div class="row">
+                    <div class="col-md-8 py-2 d-none d-md-block text-center">Quantity</div>
+                    <div class="col-12 col-md-4 text-end py-2">Price</div>
+                </div>
+            </div>
+        </div>
+        <div class="row gx-card mx-0 align-items-center border-bottom border-200">
+           
+            @foreach(var item in Model)
+            {
+                <div class="col-8 py-3">
+                    <div class="d-flex align-items-center">
+                        <a href=""><img class="img-fluid rounded-1 me-3 d-none d-md-block" src="~/assets/@item.Movie.MainImage" alt="" width="60" /></a>
+                        <div class="flex-1">
+                            <h5 class="fs-0"><a class="text-900" href="/customer/home/details/@item.Movie.Id">@item.Movie.Name</a></h5>
+                            <div class="fs--2 fs-md--1">
+                                <a class="text-danger" asp-route-movieId="@item.MovieId" asp-action="DeleteMovie">
+                                    Remove
+
+                                </a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4 py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-1 order-md-0">
+                            <div>
+                                <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
+                                    <a asp-action="DecremntCount" asp-route-movieId="@item.MovieId" class="btn btn-sm btn-outline-secondary border-300 px-2 shadow-none" data-type="minus">-</a>
+                                    <input class="form-control disabled text-center px-2 input-spin-none" type="number" min="1" value="@item.Count" aria-label="Amount (to the nearest dollar)" style="width: 50px" />
+                                    <a asp-action="IncremntCount" asp-route-movieId="@item.MovieId" class="btn btn-sm btn-outline-secondary border-300 px-2 shadow-none" data-type="plus">+</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end ps-0 order-0 order-md-1 mb-2 mb-md-0 text-600">@item.Price</div>
+                    </div>
+                </div>
+            
+           
+        
+       
+        <div class="row fw-bold gx-card mx-0">
+            <div class="col-9 col-md-8 py-2 text-end text-900">Total</div>
+            <div class="col px-0">
+                <div class="row gx-card mx-0">
+                    <div class="col-md-8 py-2 d-none d-md-block text-center">@item.Count</div>
+                            <div class="col-12 col-md-4 text-end py-2"> @(item.Price* item.Count)</div>
+                </div>
+            </div>
+        </div>
+        }
+        </div>
+    </div>
+    <div class="card-footer bg-light d-flex justify-content-end">
+        <form asp-action="Index" class="me-3">
+            <div class="input-group input-group-sm">
+                <input name="code" class="form-control" type="text" placeholder="Promocode" />
+                <button class="btn btn-outline-secondary border-300 btn-sm shadow-none" type="submit">Apply</button>
+            </div>
+        </form>
+        <a class="btn btn-sm btn-primary" href="../../app/e-commerce/checkout.html">Checkout</a>
+    </div>
+</div>

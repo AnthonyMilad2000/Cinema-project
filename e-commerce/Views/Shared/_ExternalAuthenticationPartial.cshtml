@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<div class="row g-2 mt-2">
+    @{
+        var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+        var googleProvider = providers.FirstOrDefault(p => p.Name.ToLower() == "google");
+        var facebookProvider = providers.FirstOrDefault(p => p.Name.ToLower() == "facebook");
+    }
+
+    <div class="col-sm-6">
+        @if (googleProvider != null)
+        {
+            <form id="googleForm" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" style="display:none">
+                <input type="hidden" name="provider" value="@googleProvider.Name" />
+            </form>
+
+            <a class="btn btn-outline-google-plus btn-sm d-block w-100" href="#"
+               onclick="document.getElementById('googleForm').submit(); return false;">
+                <span class="fab fa-google-plus-g me-2"></span> Google
+            </a>
+        }
+    </div>
+
+    <div class="col-sm-6">
+        @if (facebookProvider != null)
+        {
+            <form id="facebookForm" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" style="display:none">
+                <input type="hidden" name="provider" value="@facebookProvider.Name" />
+            </form>
+
+            <a class="btn btn-outline-facebook btn-sm d-block w-100" href="#"
+               onclick="document.getElementById('facebookForm').submit(); return false;">
+                <span class="fab fa-facebook-square me-2"></span> Facebook
+            </a>
+        }
+    </div>
+</div>
+
+
+    
+     

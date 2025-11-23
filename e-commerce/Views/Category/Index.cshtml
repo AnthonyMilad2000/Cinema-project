@@ -1,0 +1,81 @@
+﻿@using Cinema.Models.ViewModels
+@model indexVM
+
+<div class="content">
+
+   
+    <h2>Category List</h2>
+    <div class="table-responsive scrollbar">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th class="text-end" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Category)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td class="text-end">
+                            <div>
+                                <a class="btn btn-link p-0" href="/category/Edit/@item.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                    <span class="text-500 fas fa-edit"></span>
+                                </a>
+
+
+                                <button class="btn btn-link p-0 ms-2"
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        data-id="@item.Id"
+                                        data-title="@item.Title"
+                                        title="Delete">
+                                    <span class="text-500 fas fa-trash-alt"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <a href="/category/create" class="btn btn-info mb-3">Create</a>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete <strong id="categoryTitle"></strong>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes, Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', event => {
+            const button = event.relatedTarget;
+            const categoryId = button.getAttribute('data-id');
+            const categoryTitle = button.getAttribute('data-title');
+
+            const categoryTitleSpan = deleteModal.querySelector('#categoryTitle');
+            const confirmDeleteBtn = deleteModal.querySelector('#confirmDeleteBtn');
+
+            categoryTitleSpan.textContent = `"${categoryTitle}"`;
+
+            confirmDeleteBtn.href = `/category/delete/${categoryId}`;
+        });
+    </script>
+}

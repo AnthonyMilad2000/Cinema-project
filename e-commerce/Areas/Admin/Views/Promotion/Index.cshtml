@@ -1,0 +1,67 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@using Cinema.Models
+@model IEnumerable<Promotion>
+
+<div class="content">
+
+    <h2>Promotions List</h2>
+    <div class="table-responsive scrollbar">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Code</th>
+                    <th scope="col">Discount</th>
+                    <th scope="col">Max Usage</th>
+                    <th scope="col">Movie</th>
+                    <th scope="col">Status</th>
+                    <th class="text-end" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Code</td>
+                        <td>@item.Discount %</td>
+                        
+                        <td>@item.MaxUsage</td>
+                        <td>@item.Movie?.Name</td>
+
+                        @if (item.IsValid)
+                        {
+                            <td><span class="badge text-bg-success">Valid</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="badge text-bg-danger">Expired</span></td>
+                        }
+
+                        <td class="text-end">
+                            <div>
+                                <a class="btn btn-link p-0"
+                                   href="/Admin/Promotion/Edit/@item.Id"
+                                   data-bs-toggle="tooltip" title="Edit">
+                                    <span class="text-500 fas fa-edit"></span>
+                                </a>
+
+                                <a class="btn btn-danger p-0 ms-2"
+                                   href="/Admin/Promotion/Delete/@item.Id">
+                                    Delete
+                                </a>
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <a href="/Admin/Promotion/Create" class="btn btn-info mb-3">Create</a>
+
+</div>

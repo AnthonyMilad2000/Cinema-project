@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using Cinema.Models
+@model IEnumerable<ApplicationUser>
+
+<div class="content">
+
+
+    <h2>User List</h2>
+    <div class="table-responsive scrollbar">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Email Confirmed</th>
+                    <th class="text-end" scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        @if(!item.EmailConfirmed){
+                        <td><span class="badge text-bg-danger">Not Confirmed</span></td>
+                        }
+                            else
+                                {
+                            <td><span class="badge text-bg-success">Confirmed</span></td>
+                        }
+                        @if (!item.LockoutEnabled)
+                        {
+                            <td><span class="badge text-bg-danger">Blocked</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="badge text-bg-success">Active</span></td>
+                        }
+                        <td class="text-end">
+                            <div>
+                                <a class="btn btn-link p-0" href="/admin/user/Edit/@item.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                                    <span class="text-500 fas fa-edit"></span>
+                                </a>
+
+
+                               
+                                       
+                                    @if (!item.LockoutEnabled)
+                                    {
+                                    <a class="btn btn-success p-0 ms-2" href="/Admin/User/lockUnlock/@item.Id">
+                                        Unlock
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-Danger p-0 ms-2" href="/Admin/User/lockUnlock/@item.Id">
+                                        Lock
+                                    </a>
+                                }
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <a href="/admin/user/create" class="btn btn-info mb-3">Create</a>
+   
+
+</div>
+
+

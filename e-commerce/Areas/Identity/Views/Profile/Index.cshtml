@@ -1,0 +1,95 @@
+﻿@using Cinema.ViewModels
+@model ApplicationUserVM
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+    Layout = "~/Areas/Customer/Views/Home/Shared/_CustomerLayout.cshtml";
+}
+@section Scripts {
+
+    <partial name="_NotificationPartial" />
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-3 btn-reveal-trigger">
+            <div class="card-header position-relative min-vh-25 mb-8">
+                <div class="cover-image">
+                    <div class="bg-holder rounded-3 rounded-bottom-0" style="background-image:url(../../assets/img/generic/4.jpg);">
+                    </div>
+                    <!--/.bg-holder-->
+
+                    <input class="d-none" id="upload-cover-image" type="file" />
+                    <label class="cover-image-file-input" for="upload-cover-image"><span class="fas fa-camera me-2"></span><span>Change cover photo</span></label>
+                </div>
+                <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
+                    <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
+                        <img src="~/assets/img/team/2.jpg" width="200" alt="" data-dz-thumbnail="data-dz-thumbnail" />
+                        <input class="d-none" id="profile-image" type="file" />
+                        <label class="mb-0 overlay-icon d-flex flex-center" for="profile-image"><span class="bg-holder overlay overlay-0"></span><span class="z-index-1 text-white dark__text-white text-center fs--1"><span class="fas fa-camera"></span><span class="d-block">Update</span></span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-0">
+    <div class="col-lg-8 pe-lg-2">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Settings</h5>
+            </div>
+            <div class="card-body bg-light">
+                <form asp-action="UpdateProfile" class="row g-3">
+                    
+                    <div class="col-lg-6">
+                        <label class="form-label" for="last-name">Name</label>
+                        <input asp-for="Name" class="form-control" type="text"/>
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label" for="email1">Email</label>
+                        <input asp-for="Email" class="form-control" type="text" disabled />
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label" for="phone">Phone</label>
+                        <input asp-for="PhoneNumber" class="form-control" type="text" />
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label" for="address">Address</label>
+                        <input asp-for="Address" class="form-control" type="text" />
+                    </div>
+                    <div class="col-12 d-flex justify-content-end">
+                        <button class="btn btn-primary" type="submit">Update </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+       
+    </div>
+    <div class="col-lg-4 ps-lg-2">
+        <div class="sticky-sidebar">
+           
+           
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Change Password</h5>
+                </div>
+                <div class="card-body bg-light">
+                    <form asp-action="UpdatePassword">
+                        <div class="mb-3">
+                            <label class="form-label" for="old-password">Old Password</label>
+                            <input asp-for="CurrentPassword" class="form-control" id="old-password" type="password" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="new-password">New Password</label>
+                            <input asp-for="NewPassword" class="form-control" id="new-password" type="password" />
+                        </div>
+                        
+                        <button class="btn btn-primary d-block w-100" type="submit">Update Password </button>
+                    </form>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
