@@ -324,5 +324,7 @@ namespace Cinema.Areas.Identity.Controllers
 
             return RedirectToAction("Login");
         }
+
+
     }
 }

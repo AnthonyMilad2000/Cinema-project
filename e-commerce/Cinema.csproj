@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Cinema</RootNamespace>
+    <UserSecretsId>b209a736-4fe2-4e83-9846-02162ef4e546</UserSecretsId>
   </PropertyGroup>
 
 

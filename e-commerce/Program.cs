@@ -8,6 +8,7 @@ using Cinema.Utilites.DBSeeder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
 
 namespace e_commerce
 {
@@ -55,7 +56,9 @@ namespace e_commerce
             builder.Services.AddScoped<AccountHelper>();
             builder.Services.AddScoped<IInitializer, Initializer>();
 
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
+            StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
             // External Login With Google
             builder.Services.AddAuthentication()
            .AddGoogle("google", opt =>

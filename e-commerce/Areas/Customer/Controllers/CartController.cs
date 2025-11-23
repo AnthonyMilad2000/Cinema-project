@@ -3,7 +3,9 @@ using Cinema.Repositories.IRepository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Linq.Expressions;
+using System.Threading;
 
 
 namespace Cinema.Areas.Customer.Controllers
@@ -69,7 +71,7 @@ namespace Cinema.Areas.Customer.Controllers
         }
         public async Task<IActionResult> AddToCart(int movieId, int count, CancellationToken cancellationToken)
         {
-           var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
 
             if (user == null) return NotFound();
 
@@ -77,10 +79,10 @@ namespace Cinema.Areas.Customer.Controllers
 
             if (movieInDb == null) return NotFound();
 
-            var cart = await _cartRepository.GetOneAsync(e => e.MovieId == movieId 
+            var cart = await _cartRepository.GetOneAsync(e => e.MovieId == movieId
             && e.ApplicationUserId == user.Id);
 
-            if(cart is not null)
+            if (cart is not null)
             {
                 cart.Count += count;
             }
@@ -100,7 +102,7 @@ namespace Cinema.Areas.Customer.Controllers
             await _cartRepository.CommitAsync(cancellationToken);
 
             return RedirectToAction(nameof(Index));
-            
+
         }
 
         public async Task<IActionResult> IncremntCount(int movieId)
@@ -150,6 +152,50 @@ namespace Cinema.Areas.Customer.Controllers
             await _cartRepository.CommitAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Pay(CancellationToken cancellationToken)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null) return NotFound();
+
+            var cart = await _cartRepository.GetAsync(
+     e => e.ApplicationUserId == user.Id,
+     include: new Expression<Func<Cart, object>>[] { e => e.Movie }, 
+     cancellationToken: default,
+     tracked: false
+ );
+
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment",
+                SuccessUrl = $"{Request.Scheme}://{Request.Host}/identity/checkout/success",
+                CancelUrl = $"{Request.Scheme}://{Request.Host}/identity/checkout/cancel",
+            };
+
+            foreach (var item in cart)
+            {
+                options.LineItems.Add(new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "egp",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Movie.Name,
+                            Description = item.Movie.Description,
+                        },
+                        UnitAmount = (long)item.Price * 100,
+                    },
+                    Quantity = item.Count,
+                });
+            }
+
+            var service = new SessionService();
+            var session = service.Create(options);
+            return Redirect(session.Url);
         }
 
     }
